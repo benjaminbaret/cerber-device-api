@@ -21,21 +21,80 @@ model User {
   firstName String? 
   lastName String?
 
+  numberOfDevice Int @default(0)
+  device Device[]
+
   @@map("users")
-  bookmarks Bookmark[]
+
 }
 
-model Bookmark {
+model Device {
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title String
-  description String? 
-  link String
+  name String
+  type String?
+  status String @default("pending")
+  updateProgress Int @default(0)
+  lastUpdate DateTime?
+
+  signature String @unique
+  hash String
 
   userId Int
   user User @relation(fields: [userId], references: [id]) // , onDelete: Cascade --> delete bookmarks related to a user
 
-  @@map("bookmarks")
+  groupeId Int?
+  group Group? @relation(fields: [groupeId], references: [id])
+
+  deployment Deployment?
+  
+
+  @@map("devices")
+}
+
+model Group {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+
+  device Device[]
+  deployment Deployment?
+
+  @@map("groups")
+}
+
+model Update {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String 
+  size String 
+
+  deployment Deployment?
+
+  @@map("updates")
+}
+
+model Deployment {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group Group @relation(fields: [groupId], references: [id])
+  groupId Int @unique
+
+  device Device @relation(fields: [deviceId], references: [id])
+  deviceId Int @unique
+
+  update Update @relation(fields: [updateId], references: [id])
+  updateId Int @unique
+  
+  schedule DateTime @default(now())
+
+  @@map("deployments")
 }

@@ -2,7 +2,6 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -12,46 +11,13 @@ export class AuthService {
         private prisma: PrismaService, 
         private jwt: JwtService,
         private config: ConfigService) {}
-    async signup(dto: AuthDto) {
-        
-        // generate pwd
-        const hash = await argon.hash(dto.password);
-        //save user
-
-        try {
-            const user = await this.prisma.user.create({
-                data: {
-                    email: dto.email, 
-                    hash,
-                },
-            });
-            
-            
-            return this.signToken(user.id, user.email);
-
-        } catch(error) {
-            if(error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002')
-                {
-                    throw new ForbiddenException(
-                        'Credentials taken', 
-                        ) 
-                };
-            }
-            throw error;
-        }
-    }
-
-    // find the user by email
-    // if user does not exist throw exception
-
 
     async signin(dto: AuthDto) {
 
-        // user exist ? yes : throw error
-        const user = await this.prisma.user.findUnique({
+        // Device exist ?  if not : throw error
+        const user = await this.prisma.device.findUnique({
             where: {
-                email: dto.email, 
+                signature: dto.signature,
             },
         });
 
@@ -68,7 +34,7 @@ export class AuthService {
                 'Credentials Incorrect',
             );
 
-        return this.signToken(user.id, user.email);
+        return this.signToken(user.id, user.signature);
     }
 
     async signToken(userId: number, email: string): Promise<{ access_token: string}> {
@@ -86,7 +52,7 @@ export class AuthService {
             secret: secret
             },
         );
- 
+
         return {
             access_token: token,
         };
