@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "spec:files": "npx dotenv -e .env -- prisma studio",
+    "prisma:dev:studio": "npx dotenv -e .env -- prisma studio",
     "prisma:test:studio": "npx dotenv -e .env.test -- prisma studio",
     "prisma:dev:deploy": "prisma migrate deploy",
     "db:dev:rm": "docker-compose rm -s -f -v dev-db",
@@ -37,6 +37,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.2.0",
     "@prisma/client": "^5.8.0",
     "argon2": "^0.31.2",
     "class-transformer": "^0.5.1",

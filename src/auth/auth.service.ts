@@ -13,33 +13,33 @@ export class AuthService {
         private config: ConfigService) {}
 
     async signin(dto: AuthDto) {
-        
-        // Device exist ?  if not : throw error
-        const user = await this.prisma.device.findUnique({
+
+
+        const device = await this.prisma.device.findUnique({
             where: {
                 signature: dto.signature,
             },
         });
 
-        if (!user) 
+        if (!device) 
             throw new ForbiddenException(
             'Credentials Incorrect',
         );
 
         // password correct ? yes : throw error
-        const pwdMatches = await argon.verify(user.hash, dto.password);
+        const pwdMatches = await argon.verify(device.hash, dto.password);
 
         if(!pwdMatches)
             throw new ForbiddenException(
                 'Credentials Incorrect',
             );
 
-        return this.signToken(user.id, user.signature);
+        return this.signToken(device.id, device.signature);
     }
 
-    async signToken(userId: number, email: string): Promise<{ access_token: string}> {
+    async signToken(signature: number, email: string): Promise<{ access_token: string}> {
         const payload = {
-            sub: userId, 
+            sub: signature, 
             email: email
         }
 
