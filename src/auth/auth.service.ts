@@ -13,7 +13,7 @@ export class AuthService {
         private config: ConfigService) {}
 
     async signin(dto: AuthDto) {
-
+        
         // Device exist ?  if not : throw error
         const user = await this.prisma.device.findUnique({
             where: {

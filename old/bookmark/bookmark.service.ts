@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+/* import { Injectable } from '@nestjs/common';
 import { EditBookmarkDto, CreateBookmarkDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ForbiddenException } from '@nestjs/common';
@@ -77,3 +77,4 @@ export class BookmarkService {
         })
     }
 }
+ */
