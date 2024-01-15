@@ -5,12 +5,16 @@ import { PrismaService } from '../../src/prisma/prisma.service';
 const config = new ConfigService();
 const prisma = new PrismaService(config);
 
-async function addDevice(signature: string, hash: string, name: string): Promise<void> {
-try {
+export async function testPreConditions(): Promise<void> {
+    const signature = "signature";
+    const hash = await argon.hash('password');
+    const name = "name";
+
+    try {
 
     const user = await prisma.user.create({
         data: {
-            email: "    ",
+            email: "ben@gmail.com",
             hash,
         },
     });
@@ -33,13 +37,3 @@ try {
     await prisma.$disconnect();
 }
 }
-
-
-
-async function main() {
-    const hashPassword = await argon.hash('password');
-
-    addDevice('signature', hashPassword, "name");
-}
-
-main();

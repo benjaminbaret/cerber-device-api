@@ -4,6 +4,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
 import { AuthDto } from '../src/auth/dto';
+import { testPreConditions } from './tools/testPreConditions';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -28,6 +29,8 @@ describe('App e2e', () => {
       prisma = app.get(PrismaService);
 
       await prisma.cleanDb();
+      await testPreConditions();
+      
 
 
 
@@ -42,8 +45,8 @@ describe('App e2e', () => {
   describe('Auth', () => {
 
     const dto: AuthDto = {
-      signature: 'raspberrypi-01:02:03:04', 
-      password: '123',
+      signature: 'signature', 
+      password: 'password',
     }
 
     describe('Signin', () => {
@@ -81,16 +84,14 @@ describe('App e2e', () => {
           .expectStatus(400);
       });
 
-      it.todo('Should signin');/*,  () => {
+      it('Should signin', () => {
         return pactum
           .spec()
           .post('/auth/signin')
           .withBody(dto) 
           .expectStatus(200)
           .stores('userAt', 'access_token');
-      }); */
-
+      });
     });
   });
-
-  });
+});
