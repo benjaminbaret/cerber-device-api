@@ -5,6 +5,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
 import { AuthDto } from '../src/auth/dto';
 import { testPreConditions } from './tools/testPreConditions';
+import { EditDeviceDto } from 'src/device/dto/edit-device.dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -90,8 +91,57 @@ describe('App e2e', () => {
           .post('/auth/signin')
           .withBody(dto) 
           .expectStatus(200)
-          .stores('userAt', 'access_token');
+          .stores('deviceAt', 'access_token');
       });
     });
   });
+
+
+  describe('Device', () => {
+
+    const dto: EditDeviceDto = {
+      status: 'connected'
+    }
+
+    describe('Edit Status', () => {
+
+      it('should throw if no token provided', () => {
+        return pactum
+          .spec()
+          .patch(
+            '/device/status', 
+          )
+          .withBody({
+            status: dto.status,
+          })
+          .expectStatus(401);
+      });
+
+      it('should throw if no body provided', () => {
+        return pactum
+        .spec()
+        .patch(
+          '/device/status', 
+        )
+        .expectStatus(401);
+      });
+
+      it('should set device status', () => {
+        return pactum
+          .spec()
+          .patch(
+            '/device/status', 
+          )
+          .withHeaders({
+            Authorization: 'Bearer $S{deviceAt}',
+          })  
+          .withBody({
+            status: dto.status,
+          })
+          .expectStatus(200);
+      });
+    });
+  });
+
+
 });

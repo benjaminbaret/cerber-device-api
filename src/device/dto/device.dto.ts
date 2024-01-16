@@ -2,14 +2,9 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from "@nestjs/swagger";
 
 
-export class AuthDto {
+export class DeviceDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    signature: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    password: string;
+    status: string;
 }

@@ -20,7 +20,7 @@ export async function testPreConditions(): Promise<void> {
     });
 
     const userId = user.id;
-    
+
     const device = await prisma.device.create({
         data: {
             signature,
