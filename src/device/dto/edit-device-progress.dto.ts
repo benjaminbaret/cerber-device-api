@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-    IsDefined,
     IsNotEmpty,
-    IsString,
+    IsNumber,
 } from 'class-validator';
 
-export class EditDeviceDto {
+export class EditDeviceProgressDto {
     @ApiProperty()
-    @IsString()
     @IsNotEmpty()
-    status: string;
+    @IsNumber()
+    updateProgress: number;
 }
