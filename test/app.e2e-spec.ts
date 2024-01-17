@@ -196,7 +196,7 @@ describe('App e2e', () => {
 
 
       it('should set device status', () => {
-        return pactum
+        let pactumResult = pactum
           .spec()
           .patch(
             '/device/progress', 
@@ -208,7 +208,9 @@ describe('App e2e', () => {
             updateProgress: dto.updateProgress,
           })
           .expectStatus(200);
+          })
       });   
+
     });
 
     describe('Get bundle on local machine', () => {
@@ -275,7 +277,4 @@ describe('App e2e', () => {
           })
         });
       });
-
-        
     });
-});

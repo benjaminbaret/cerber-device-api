@@ -17,7 +17,7 @@ export class DeviceService {
             throw new ForbiddenException('Device not found');
         }
 
-        this.prisma.device.update({
+        await this.prisma.device.update({
             where: {
                 id: deviceId,
             },
@@ -39,7 +39,7 @@ export class DeviceService {
             throw new ForbiddenException('Device not found');
         }
         
-        this.prisma.device.update({
+        await this.prisma.device.update({
             where: {
                 id: deviceId,
             },
