@@ -1,6 +1,6 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EditDeviceStatusDto, EditDeviceProgressDto } from './dto';
+import { EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
 
 @Injectable()
 export class DeviceService {
@@ -48,5 +48,55 @@ export class DeviceService {
             },
         });
     }
+
+
     
+    async getNextUpdate(deviceId: number) {
+
+        const device : Object = await this.prisma.device.findUnique({
+            where: {
+                id: deviceId,
+            },
+        });
+
+        let groupId = device['groupId'];
+
+        // todo: check if find first if correct --> 
+        const deployment : Object = await this.prisma.deployment.findFirst({
+            where: {
+                OR: [
+                    {
+                        deviceId: deviceId,
+                    },
+                    {
+                        groupId: groupId,
+                    },
+                ],
+                AND: [
+                    {
+                        status: true,
+                    },
+                ],
+            },
+        });
+
+        
+        if(deployment)
+        {
+            let updateObject = await this.prisma.update.findUnique({
+                where: {
+                    id: deployment['updateId'],
+                },
+            });
+
+            return {
+                name: updateObject['name'],
+                uri: updateObject['uri'],
+                size: updateObject['size'],
+            };
+        }
+        
+        return null;
+    }
+
 }

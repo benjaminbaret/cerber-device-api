@@ -18,10 +18,9 @@ export class PrismaService extends PrismaClient{
     // tear down logic before e2e tests
     cleanDb() {
 
-        /* return this.$transaction([
-            
-        ]); */
+        return this.$transaction([
+        this.device.deleteMany(),
         this.user.deleteMany(),
-            this.device.deleteMany()
+    ]);
     }
 }

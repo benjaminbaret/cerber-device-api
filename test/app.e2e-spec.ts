@@ -49,7 +49,7 @@ describe('App e2e', () => {
 
     describe('Auth', () => {
 
-    const dto: AuthDto = {
+    let dto: AuthDto = {
       signature: 'signature', 
       password: 'password',
     }
@@ -209,10 +209,73 @@ describe('App e2e', () => {
           })
           .expectStatus(200);
       });   
+    });
+
+    describe('Get bundle on local machine', () => {
+
+      // pre conditions
+
+      it('should throw if no token provided', () => {
+      return pactum
+      .spec()
+      .get(
+        '/device/update/next', 
+      )
+      .expectStatus(401)
+      });
+
+      it('should signin', () => {
+
+        let anotherDto: AuthDto = {
+          signature: 'anotherSignature', 
+          password: 'password',
+        }
+
+        return pactum
+        .spec()
+        .post('/auth/signin')
+        .withBody({
+          signature: 'anotherSignature',
+          password: 'password',
+        })
+        .expectStatus(200)
+        .stores('anotherDeviceAt', 'access_token');
+      });
 
     
+
+      it('should send empty body because no update available for the device', () => {
+
+        return pactum
+        .spec()
+        .get(
+          '/device/update/next', 
+        )
+        .expectStatus(200)
+        .withHeaders({
+            Authorization: 'Bearer $S{anotherDeviceAt}', // the device that have a pending update
+          })
+        .expectBodyContains('')
+      });
+
+        it('should send update information', () => {
+          return pactum
+          .spec()
+          .get(
+            '/device/update/next', 
+          )
+          .expectStatus(200)
+          .withHeaders({
+            Authorization: 'Bearer $S{deviceAt}', // the device that have a pending update
+          })
+          .expectBody({
+            name: "Raspberry udpate 1",
+            uri: "https://example.com",
+            size: "100",
+          })
+        });
+      });
+
+        
     });
-  });
-
-
 });

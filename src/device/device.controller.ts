@@ -1,9 +1,9 @@
-import { Controller, UseGuards, Patch, Body } from '@nestjs/common';
+import { Controller, UseGuards, Patch, Body, Get, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { DeviceService } from '../device/device.service';
-import { EditDeviceStatusDto, EditDeviceProgressDto } from './dto';
+import { EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
 import { JwtGuard } from '../auth/guard';
 import { GetDevice } from '../auth/decorator';
-import { ApiOkResponse, ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse} from '@nestjs/swagger';
+import { ApiOkResponse, ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse} from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
 @Controller('device')
@@ -13,7 +13,7 @@ export class DeviceController {
     
     @ApiBearerAuth()
     @ApiOkResponse({ type: null, description: "Status successfully updated"})
-    @ApiBadRequestResponse({ status: 400, description: "Bad Request or Unauthorized" })
+    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
     @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
     @Patch('status')
     editDeviceStatus(
@@ -41,5 +41,19 @@ export class DeviceController {
         );
     }
 
+    @ApiBearerAuth()    
+    @ApiOkResponse({type: UpdateDto, description : "Update available at indicated path"})
+    @ApiNoContentResponse({status: 204, description: "No update available"})
+    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
+    @Get('update/next')
+    @UseInterceptors(ClassSerializerInterceptor)
+    getNextUpdate(
+        @GetDevice('id') deviceId: number,
+    ) {
+
+        return this.deviceService.getNextUpdate(
+            deviceId,
+        );
+    }
 }
 

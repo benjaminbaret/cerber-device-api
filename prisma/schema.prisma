@@ -71,6 +71,7 @@ model Update {
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  uri String
 
   name String 
   size String 
@@ -84,12 +85,13 @@ model Deployment {
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  status Boolean @default(false)
 
-  group Group @relation(fields: [groupId], references: [id])
-  groupId Int @unique
+  group Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId Int? @unique
 
-  device Device @relation(fields: [deviceId], references: [id])
-  deviceId Int @unique
+  device Device? @relation(fields: [deviceId], references: [id])
+  deviceId Int? @unique
 
   update Update @relation(fields: [updateId], references: [id])
   updateId Int @unique
