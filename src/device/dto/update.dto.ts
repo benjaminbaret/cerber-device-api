@@ -19,7 +19,7 @@ export class UpdateDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    uri: string;
+    url: string;
 
     @ApiProperty()
     @IsNotEmpty()

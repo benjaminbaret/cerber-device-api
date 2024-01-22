@@ -36,7 +36,7 @@ export async function testPreConditions(): Promise<void> {
     const update = await prisma.update.create({
         data: {
             name: "Raspberry udpate 1",
-            uri: "https://example.com",
+            url: "https://example.com",
             size: "100",
         },
     }); 

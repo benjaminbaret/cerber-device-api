@@ -272,7 +272,7 @@ describe('App e2e', () => {
           })
           .expectBody({
             name: "Raspberry udpate 1",
-            uri: "https://example.com",
+            url: "https://example.com",
             size: "100",
           })
         });

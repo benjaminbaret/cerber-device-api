@@ -91,7 +91,7 @@ export class DeviceService {
 
             return {
                 name: updateObject['name'],
-                uri: updateObject['uri'],
+                url: updateObject['url'],
                 size: updateObject['size'],
             };
         }
