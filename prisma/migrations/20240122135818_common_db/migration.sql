@@ -7,21 +7,9 @@ CREATE TABLE "users" (
     "hash" TEXT NOT NULL,
     "firstName" TEXT,
     "lastName" TEXT,
+    "numberOfDevice" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "bookmarks" (
-    "id" SERIAL NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
-    "link" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
-
-    CONSTRAINT "bookmarks_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -30,13 +18,14 @@ CREATE TABLE "devices" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "type" TEXT,
     "status" TEXT NOT NULL DEFAULT 'pending',
-    "udpateProgress" INTEGER NOT NULL DEFAULT 0,
+    "updateProgress" INTEGER NOT NULL DEFAULT 0,
     "lastUpdate" TIMESTAMP(3),
     "signature" TEXT NOT NULL,
     "hash" TEXT NOT NULL,
-    "groupeId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "groupeId" INTEGER,
 
     CONSTRAINT "devices_pkey" PRIMARY KEY ("id")
 );
@@ -56,6 +45,7 @@ CREATE TABLE "updates" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "url" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "size" TEXT NOT NULL,
 
@@ -67,8 +57,9 @@ CREATE TABLE "deployments" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "groupId" INTEGER NOT NULL,
-    "deviceId" INTEGER NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT false,
+    "groupId" INTEGER,
+    "deviceId" INTEGER,
     "updateId" INTEGER NOT NULL,
     "schedule" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -94,16 +85,16 @@ CREATE UNIQUE INDEX "deployments_deviceId_key" ON "deployments"("deviceId");
 CREATE UNIQUE INDEX "deployments_updateId_key" ON "deployments"("updateId");
 
 -- AddForeignKey
-ALTER TABLE "bookmarks" ADD CONSTRAINT "bookmarks_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "devices" ADD CONSTRAINT "devices_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "devices" ADD CONSTRAINT "devices_groupeId_fkey" FOREIGN KEY ("groupeId") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "devices" ADD CONSTRAINT "devices_groupeId_fkey" FOREIGN KEY ("groupeId") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "deployments" ADD CONSTRAINT "deployments_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "deployments" ADD CONSTRAINT "deployments_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "groups"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "deployments" ADD CONSTRAINT "deployments_deviceId_fkey" FOREIGN KEY ("deviceId") REFERENCES "devices"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "deployments" ADD CONSTRAINT "deployments_deviceId_fkey" FOREIGN KEY ("deviceId") REFERENCES "devices"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "deployments" ADD CONSTRAINT "deployments_updateId_fkey" FOREIGN KEY ("updateId") REFERENCES "updates"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -21,8 +21,7 @@ model User {
   email String @unique
   hash String
 
-  firstName String? 
-  lastName String?
+  username String?
 
   numberOfDevice Int @default(0)
   device Device[]
