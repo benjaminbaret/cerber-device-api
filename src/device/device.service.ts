@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
+import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
 
 @Injectable()
 export class DeviceService {
@@ -22,7 +22,28 @@ export class DeviceService {
                 id: deviceId,
             },
             data: {
-                status: dto.status,
+                deviceStatus: dto.deviceStatus,
+            },
+        });
+    }
+
+    async editUpdateStatus(deviceId: number, dto: EditUpdateStatusDto) {
+        let device : Object = await this.prisma.device.findUnique({
+            where: {
+                id: deviceId,
+            },
+        });
+
+        if (!device) {
+            throw new ForbiddenException('Device not found');
+        }
+
+        await this.prisma.device.update({
+            where: {
+                id: deviceId,
+            },
+            data: {
+                updateStatus: dto.updateStatus,
             },
         });
     }

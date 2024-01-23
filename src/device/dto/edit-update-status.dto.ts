@@ -4,9 +4,9 @@ import {
     IsString,
 } from 'class-validator';
 
-export class EditDeviceStatusDto {
+export class EditUpdateStatusDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    deviceStatus: string;
+    updateStatus: string;
 }

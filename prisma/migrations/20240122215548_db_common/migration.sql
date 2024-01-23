@@ -5,8 +5,7 @@ CREATE TABLE "users" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "email" TEXT NOT NULL,
     "hash" TEXT NOT NULL,
-    "firstName" TEXT,
-    "lastName" TEXT,
+    "username" TEXT,
     "numberOfDevice" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")

@@ -37,7 +37,10 @@ model Device {
 
   name String
   type String?
-  status String @default("pending")
+  
+  deviceStatus String @default("pending") // pending, active (or implicitly inactive if updatedAt > 1 min)
+  
+  updateStatus String @default("none") // none, triggered, rebooting, done 
   updateProgress Int @default(0)
   lastUpdate DateTime?
 
