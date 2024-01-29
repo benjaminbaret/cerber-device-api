@@ -3,7 +3,7 @@ import { DeviceService } from '../device/device.service';
 import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
 import { JwtGuard } from '../auth/guard';
 import { GetDevice } from '../auth/decorator';
-import { ApiOkResponse, ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse} from '@nestjs/swagger';
+import { ApiOkResponse, ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse, ApiUnauthorizedResponse} from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
 @Controller('device')
@@ -13,7 +13,7 @@ export class DeviceController {
     
     @ApiBearerAuth()
     @ApiOkResponse({ type: null, description: "Status successfully updated"})
-    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
+    @ApiUnauthorizedResponse({ description: "Bad Request or Unauthorized" })
     @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
     @Patch('deviceStatus')
     editDeviceStatus(
@@ -28,7 +28,7 @@ export class DeviceController {
 
     @ApiBearerAuth()
     @ApiOkResponse({ type: null, description: "Status successfully updated"})
-    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
+    @ApiUnauthorizedResponse({ description: "Bad Request or Unauthorized" })
     @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
     @Patch('updateStatus')
     editUpdateStatus(
@@ -43,7 +43,7 @@ export class DeviceController {
 
     @ApiBearerAuth()
     @ApiOkResponse({ type: null, description: "Update progress successfully updated"})
-    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
+    @ApiUnauthorizedResponse({ description: "Bad Request or Unauthorized" })
     @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
     @Patch('progress')
     editDeviceUpdateProgress(
@@ -59,7 +59,7 @@ export class DeviceController {
     @ApiBearerAuth()    
     @ApiOkResponse({type: UpdateDto, description : "Update available at indicated path"})
     @ApiNoContentResponse({status: 204, description: "No update available"})
-    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
+    @ApiUnauthorizedResponse({ description: "Bad Request or Unauthorized" })
     @Get('update/next')
     @UseInterceptors(ClassSerializerInterceptor)
     getNextUpdate(

@@ -4,6 +4,7 @@ import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { sha256 } from 'js-sha256';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,6 @@ export class AuthService {
         private config: ConfigService) {}
 
     async signin(dto: AuthDto) {
-
 
         const device = await this.prisma.device.findUnique({
             where: {
@@ -25,9 +25,14 @@ export class AuthService {
             throw new ForbiddenException(
             'Credentials Incorrect',
         );
-
+        
+        /* 
         // password correct ? yes : throw error
-        const pwdMatches = await argon.verify(device.hash, dto.password);
+        const pwdMatches = await argon.verify(device.hash, dto.password); 
+        */
+
+        // workaround to match the use of sha256 in db with webapp
+        const pwdMatches = device.hash === sha256(dto.password);
 
         if(!pwdMatches)
             throw new ForbiddenException(

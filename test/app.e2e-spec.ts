@@ -31,8 +31,6 @@ describe('App e2e', () => {
 
       await prisma.cleanDb();
       await testPreConditions();
-      
-
 
 
       pactum.request.setBaseUrl('http://localhost:3333');
@@ -60,7 +58,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post(
-            '/auth/signin', 
+            '/auth/signin',
           ).withBody({
             password: dto.password,
           })

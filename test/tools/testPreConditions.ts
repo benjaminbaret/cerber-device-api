@@ -1,6 +1,7 @@
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../src/prisma/prisma.service';
+import { sha256 } from 'js-sha256';
 
 const config = new ConfigService();
 const prisma = new PrismaService(config);
@@ -8,7 +9,10 @@ const prisma = new PrismaService(config);
 export async function testPreConditions(): Promise<void> {
 
     let signature = "signature";
-    const hash = await argon.hash('password');
+
+    /* const hash = await argon.hash('password'); */
+    const hash = sha256('password');
+
     const name = "name";
 
     try {
