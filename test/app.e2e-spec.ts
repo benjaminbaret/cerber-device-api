@@ -5,7 +5,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
 import { AuthDto } from '../src/auth/dto';
 import { testPreConditions } from './tools/testPreConditions';
-import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto } from '../src/device/dto';
+import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, EditDeviceDeploymentStatusDto } from '../src/device/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -255,6 +255,67 @@ describe('App e2e', () => {
 
     });
 
+
+     describe('Edit deployment status', () => {
+      
+      const dto: EditDeviceDeploymentStatusDto = {
+        deploymentStatus: true,
+      }
+
+      it('should throw if no token provided', () => {
+        return pactum
+          .spec()
+          .patch(
+            '/device/deployment/status', 
+          )
+          .withBody({
+            deploymentStatus: dto.deploymentStatus,
+          })
+          .expectStatus(401);
+      });
+
+      it('should throw if no body provided', () => {
+        return pactum
+        .spec()
+        .patch(
+          '/device/deployment/status', 
+        )
+        .expectStatus(401);
+      });
+
+      it('should throw if bad dto is received', () => {
+        return pactum
+          .spec()
+          .patch(
+            '/device/deployment/status', 
+          )
+          .withHeaders({
+            Authorization: 'Bearer $S{deviceAt}',
+          })  
+          .withBody({
+            status: dto.deploymentStatus,
+          })
+          .expectStatus(400);
+      });   
+
+      it('should set device status', () => {
+        let pactumResult = pactum
+          .spec()
+          .patch(
+            '/device/deployment/status', 
+          )
+          .withHeaders({
+            Authorization: 'Bearer $S{deviceAt}',
+          })  
+          .withBody({
+            deploymentStatus: dto.deploymentStatus,
+          })
+          .expectStatus(200);
+          });
+    });
+
+
+
     describe('Get bundle on local machine', () => {
 
       // pre conditions
@@ -319,4 +380,4 @@ describe('App e2e', () => {
           })
         });
       });
-    });
+});

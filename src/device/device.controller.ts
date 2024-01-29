@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Patch, Body, Get, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { DeviceService } from '../device/device.service';
-import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
+import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto, EditDeviceDeploymentStatusDto } from './dto';
 import { JwtGuard } from '../auth/guard';
 import { GetDevice } from '../auth/decorator';
 import { ApiOkResponse, ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse, ApiUnauthorizedResponse} from '@nestjs/swagger';
@@ -55,6 +55,23 @@ export class DeviceController {
             dto,
         );
     }
+
+    @ApiBearerAuth()
+    @ApiOkResponse({ type: null, description: "Update progress successfully updated"})
+    @ApiUnauthorizedResponse({ description: "Bad Request or Unauthorized" })
+    @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
+    @Patch('deployment/status') 
+    editDeviceDeploymentStatus(
+        @GetDevice('id') deviceId: number, 
+        @Body() dto: EditDeviceDeploymentStatusDto,
+    ){
+        return this.deviceService.editDeviceDeploymentStatus(
+            deviceId,
+            dto,
+        );
+    }
+
+
 
     @ApiBearerAuth()    
     @ApiOkResponse({type: UpdateDto, description : "Update available at indicated path"})

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
+import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto, EditDeviceDeploymentStatusDto } from './dto';
 
 @Injectable()
 export class DeviceService {
@@ -68,6 +68,30 @@ export class DeviceService {
                 updateProgress: dto.updateProgress,
             },
         });
+    }
+
+    async editDeviceDeploymentStatus(deviceId: number, dto: EditDeviceDeploymentStatusDto) {
+        let device : Object = await this.prisma.device.findUnique({
+            where: {
+                id: deviceId,
+            },
+        });
+
+        if (!device) {
+            throw new ForbiddenException('Device not found');
+        }
+        
+        await this.prisma.deployment.update({
+            where: {
+                id: deviceId,
+                status: true
+            },
+            data: {
+                status: dto.deploymentStatus,
+            },
+        });
+
+        // true case is not handled, improvment have to be done on this route
     }
 
 
