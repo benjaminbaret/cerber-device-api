@@ -8,16 +8,6 @@ services:
     networks: 
       production-api:
         ipv4_address: 10.18.0.3
-  prod-db:
-    image: postgres:13
-    container_name: production_db
-    environment:
-      POSTGRE_USER: postgres
-      POSTGRES_PASSWORD: 'QlA4WcApE1919V2X0V4f'
-      POSTGRE_DB: nest
-    networks:
-      production-api:
-        ipv4_address: 10.18.0.2
   nginx: 
     image: nginx:alpine
     container_name: production_nginx
@@ -27,8 +17,6 @@ services:
       - ./docker-production/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker-production/nginx/certs/certificate.crt:/etc/nginx/certificate.crt
       - ./docker-production/nginx/certs/private.key:/etc/nginx/private.key
-    depends_on:
-      - prod-db
     networks:
       production-api:
         ipv4_address: 10.18.0.4
