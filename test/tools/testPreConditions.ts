@@ -46,7 +46,7 @@ export async function testPreConditions(): Promise<void> {
         data: {
             updateId: update.id,
             status: true,
-            deviceId: device.id,
+            deviceId: device.id,       
         },
     });
 
