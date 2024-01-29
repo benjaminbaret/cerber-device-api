@@ -51,8 +51,7 @@ model Device {
   groupeId Int?
   group Group? @relation(fields: [groupeId], references: [id])
 
-  deployment Deployment?
-  
+  deployments Deployment[]  
 
   @@map("devices")
 }
@@ -65,7 +64,7 @@ model Group {
   name String @unique
 
   device Device[]
-  deployment Deployment?
+  deployments Deployment[]
 
   @@map("groups")
 }
@@ -79,7 +78,7 @@ model Update {
   name String 
   size String 
 
-  deployment Deployment?
+  deployments Deployment[]
 
   @@map("updates")
 }
@@ -90,14 +89,14 @@ model Deployment {
   updatedAt DateTime @updatedAt
   status Boolean @default(false)
 
-  group Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId Int? @unique
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId Int
 
-  device Device? @relation(fields: [deviceId], references: [id])
-  deviceId Int? @unique
+  device Device @relation(fields: [deviceId], references: [id])
+  deviceId Int
 
   update Update @relation(fields: [updateId], references: [id])
-  updateId Int @unique
+  updateId Int
   
   schedule DateTime @default(now())
 
