@@ -12,7 +12,7 @@ export async function testPreConditions(): Promise<void> {
     const name = "name";
 
     try {
-    
+
     await prisma.cleanDb();
 
     let user = await prisma.user.create({

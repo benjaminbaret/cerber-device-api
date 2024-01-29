@@ -38,7 +38,10 @@ model Device {
 
   name String
   type String?
-  status String @default("pending")
+  
+  deviceStatus String @default("pending") // pending, active (or implicitly inactive if updatedAt > 1 min)
+  
+  updateStatus String @default("none") // none, triggered, rebooting, done 
   updateProgress Int @default(0)
   lastUpdate DateTime?
 
@@ -51,7 +54,8 @@ model Device {
   groupeId Int?
   group Group? @relation(fields: [groupeId], references: [id])
 
-  deployments Deployment[]  
+  deployment Deployment?
+  
 
   @@map("devices")
 }
@@ -64,7 +68,7 @@ model Group {
   name String @unique
 
   device Device[]
-  deployments Deployment[]
+  deployment Deployment?
 
   @@map("groups")
 }
@@ -78,7 +82,7 @@ model Update {
   name String 
   size String 
 
-  deployments Deployment[]
+  deployment Deployment?
 
   @@map("updates")
 }
@@ -89,14 +93,14 @@ model Deployment {
   updatedAt DateTime @updatedAt
   status Boolean @default(false)
 
-  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId Int
+  group Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId Int? @unique
 
-  device Device @relation(fields: [deviceId], references: [id])
-  deviceId Int
+  device Device? @relation(fields: [deviceId], references: [id])
+  deviceId Int? @unique
 
   update Update @relation(fields: [updateId], references: [id])
-  updateId Int
+  updateId Int @unique
   
   schedule DateTime @default(now())
 

@@ -5,7 +5,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
 import { AuthDto } from '../src/auth/dto';
 import { testPreConditions } from './tools/testPreConditions';
-import { EditDeviceStatusDto, EditDeviceProgressDto } from '../src/device/dto';
+import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto } from '../src/device/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -109,20 +109,20 @@ describe('App e2e', () => {
 
   describe('Device', () => {
 
-    const dto: EditDeviceStatusDto = {
-      status: 'connected'
+    const deviceDto: EditDeviceStatusDto = {
+      deviceStatus: 'connected'
     }
 
-    describe('Edit Status', () => {
+    describe('Edit Device Status', () => {
 
       it('should throw if no token provided', () => {
         return pactum
           .spec()
           .patch(
-            '/device/status', 
+            '/device/deviceStatus', 
           )
           .withBody({
-            status: dto.status,
+            deviceStatus: deviceDto.deviceStatus,
           })
           .expectStatus(401);
       });
@@ -131,7 +131,7 @@ describe('App e2e', () => {
         return pactum
         .spec()
         .patch(
-          '/device/status', 
+          '/device/deviceStatus', 
         )
         .expectStatus(401);
       });
@@ -140,19 +140,63 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .patch(
-            '/device/status', 
+            '/device/deviceStatus', 
           )
           .withHeaders({
             Authorization: 'Bearer $S{deviceAt}',
           })  
           .withBody({
-            status: dto.status,
+            deviceStatus: deviceDto.deviceStatus,
           })
           .expectStatus(200);
       });      
     });
 
-    describe('Edit Status', () => {
+
+    const updateDto: EditUpdateStatusDto = {
+      updateStatus: 'connected'
+    }
+
+    describe('Edit Update Status', () => {
+
+      it('should throw if no token provided', () => {
+        return pactum
+          .spec()
+          .patch(
+            '/device/updateStatus', 
+          )
+          .withBody({
+            updateStatus: updateDto.updateStatus,
+          })
+          .expectStatus(401);
+      });
+
+      it('should throw if no body provided', () => {
+        return pactum
+        .spec()
+        .patch(
+          '/device/updateStatus', 
+        )
+        .expectStatus(401);
+      });
+
+      it('should set update status', () => {
+        return pactum
+          .spec()
+          .patch(
+            '/device/updateStatus', 
+          )
+          .withHeaders({
+            Authorization: 'Bearer $S{deviceAt}',
+          })  
+          .withBody({
+            updateStatus: updateDto.updateStatus,
+          })
+          .expectStatus(200);
+      });      
+    });
+
+    describe('Edit Progress', () => {
       
       const dto: EditDeviceProgressDto = {
         updateProgress: 90,

@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Patch, Body, Get, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { DeviceService } from '../device/device.service';
-import { EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
+import { EditUpdateStatusDto, EditDeviceStatusDto, EditDeviceProgressDto, UpdateDto } from './dto';
 import { JwtGuard } from '../auth/guard';
 import { GetDevice } from '../auth/decorator';
 import { ApiOkResponse, ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse} from '@nestjs/swagger';
@@ -15,12 +15,27 @@ export class DeviceController {
     @ApiOkResponse({ type: null, description: "Status successfully updated"})
     @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
     @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
-    @Patch('status')
+    @Patch('deviceStatus')
     editDeviceStatus(
         @GetDevice('id') deviceId: number,
         @Body() dto: EditDeviceStatusDto,
     ) {
         return this.deviceService.editDeviceStatus(
+            deviceId,
+            dto,
+        );
+    }
+
+    @ApiBearerAuth()
+    @ApiOkResponse({ type: null, description: "Status successfully updated"})
+    @ApiBadRequestResponse({ status: 401, description: "Bad Request or Unauthorized" })
+    @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
+    @Patch('updateStatus')
+    editUpdateStatus(
+        @GetDevice('id') deviceId: number,
+        @Body() dto: EditUpdateStatusDto,
+    ) {
+        return this.deviceService.editUpdateStatus(
             deviceId,
             dto,
         );
