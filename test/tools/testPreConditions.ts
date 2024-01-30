@@ -42,6 +42,7 @@ export async function testPreConditions(): Promise<void> {
             name: "Raspberry udpate 1",
             url: "https://example.com",
             size: "100",
+            userId: user.id,
         },
     }); 
 

@@ -11,7 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  //directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -26,6 +26,7 @@ model User {
 
   numberOfDevice Int @default(0)
   device Device[]
+  update Update[]
 
   @@map("users")
 
@@ -81,6 +82,9 @@ model Update {
 
   name String 
   size String 
+
+  userId Int
+  user User @relation(fields: [userId], references: [id]) 
 
   deployment Deployment?
 

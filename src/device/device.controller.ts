@@ -60,7 +60,7 @@ export class DeviceController {
     @ApiOkResponse({ type: null, description: "Update progress successfully updated"})
     @ApiUnauthorizedResponse({ description: "Bad Request or Unauthorized" })
     @ApiForbiddenResponse({ status: 403, description: "Forbidden" })
-    @Patch('deployment/status') 
+    @Patch('deployment/status')
     editDeviceDeploymentStatus(
         @GetDevice('id') deviceId: number, 
         @Body() dto: EditDeviceDeploymentStatusDto,
