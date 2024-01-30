@@ -84,7 +84,6 @@ export class DeviceService {
         await this.prisma.deployment.update({
             where: {
                 id: deviceId,
-                status: true
             },
             data: {
                 status: dto.deploymentStatus,

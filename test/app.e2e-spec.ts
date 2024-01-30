@@ -256,7 +256,7 @@ describe('App e2e', () => {
     });
 
 
-     describe('Edit deployment status', () => {
+    describe('Edit deployment status', () => {
       
       const dto: EditDeviceDeploymentStatusDto = {
         deploymentStatus: true,
@@ -311,7 +311,27 @@ describe('App e2e', () => {
             deploymentStatus: dto.deploymentStatus,
           })
           .expectStatus(200);
-          });
+      });
+
+      const falseDto: EditDeviceDeploymentStatusDto = {
+        deploymentStatus: false,
+      }
+
+      it('should set device status', () => {
+        let pactumResult = pactum
+          .spec()
+          .patch(
+            '/device/deployment/status', 
+          )
+          .withHeaders({
+            Authorization: 'Bearer $S{deviceAt}',
+          })  
+          .withBody({
+            deploymentStatus: falseDto.deploymentStatus,
+          })
+          .expectStatus(200);
+      });
+
     });
 
 
