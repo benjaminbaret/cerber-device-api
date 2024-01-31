@@ -26,6 +26,7 @@ model User {
 
   numberOfDevice Int @default(0)
   device Device[]
+  update Update[]
 
   @@map("users")
 
@@ -82,6 +83,9 @@ model Update {
   name String 
   size String 
 
+  userId Int
+  user User @relation(fields: [userId], references: [id]) 
+
   deployment Deployment[]
 
   @@map("updates")
@@ -96,8 +100,8 @@ model Deployment {
   group Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId Int?
 
-  device Device? @relation(fields: [deviceId], references: [id])
-  deviceId Int?
+  device Device @relation(fields: [deviceId], references: [id])
+  deviceId Int
 
   update Update @relation(fields: [updateId], references: [id])
   updateId Int

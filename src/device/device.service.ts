@@ -71,19 +71,11 @@ export class DeviceService {
     }
 
     async editDeviceDeploymentStatus(deviceId: number, dto: EditDeviceDeploymentStatusDto) {
-        let device : Object = await this.prisma.device.findUnique({
-            where: {
-                id: deviceId,
-            },
-        });
 
-        if (!device) {
-            throw new ForbiddenException('Device not found');
-        }
-        
-        await this.prisma.deployment.update({
+
+        await this.prisma.deployment.updateMany({
             where: {
-                id: deviceId,
+                deviceId: deviceId,
             },
             data: {
                 status: dto.deploymentStatus,
