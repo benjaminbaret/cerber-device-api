@@ -76,6 +76,7 @@ export class DeviceService {
         await this.prisma.deployment.updateMany({
             where: {
                 deviceId: deviceId,
+                status: true, 
             },
             data: {
                 status: dto.deploymentStatus,
